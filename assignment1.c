@@ -236,11 +236,6 @@ uint8_t tfl_equals(tfl16_t a, tfl16_t b){
 }
 
 uint8_t  tfl_greaterthan(tfl16_t a, tfl16_t b){
-    int i, s;
-    int a_ex = 1;
-    int b_ex = 1;
-    double a_total = 0.0;
-    double b_total = 0.0;
     tfl16_t a_sign = tfl_sign(a);
     tfl16_t b_sign = tfl_sign(b);
     int8_t a_exponent = tfl_exponent(a);
@@ -248,45 +243,14 @@ uint8_t  tfl_greaterthan(tfl16_t a, tfl16_t b){
     uint16_t a_significand= tfl_significand(a);
     uint16_t b_significand = tfl_significand(b);  
 
-    if (a_exponent > 0){
-        for (i=0; i< a_exponent; ++i){
-            a_ex = 2 * a_ex;
-        } 
-    }
-    else{
-        for (i=0; i > a_exponent; --i){
-            a_ex = 2 * a_ex;
-        }
-    }
-    if (b_exponent > 0){
-        for (i=0; i< b_exponent; ++i){
-            b_ex = 2 * b_ex;
-        } 
-    }
-    else{
-        for (i=0; i > b_exponent; --i){
-            b_ex = 2 * b_ex;
-        }
+    double a_total = ((power(2,a_exponent))* (a_significand / 1024.0));
+    if (a_sign == NEGATIVE_ONE){
+        a_total = a_total * -1.0;
     }
 
-    if (a_sign == POSITIVE_ONE){
-        a_total = (a_ex * (a_significand/1024.0));
-    }
-    else if (a_sign == NEGATIVE_ONE){
-        a_total = (-1.0 * a_ex * (a_significand/1024.0));
-    }
-    else{
-        a_total = 0.0;
-    }
-
-    if (b_sign == POSITIVE_ONE){
-        b_total = (b_ex * (b_significand/1024.0));
-    }
-    else if (b_sign == NEGATIVE_ONE){
-        b_total = (-1.0 * b_ex * (b_significand/1024.0));
-    }
-    else{
-        b_total = 0.0;
+    double b_total = ((power(2,b_exponent))* (b_significand / 1024.0));
+    if (b_sign == NEGATIVE_ONE){
+        b_total = b_total * -1.0;
     }
 
     if (a_total > b_total){
